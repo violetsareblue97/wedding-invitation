@@ -10,7 +10,6 @@ import {
   DateTimeModal,
   LoveStoryModal,
   GiftModal,
-  AboutUsModal,
   GalleryModal,
 } from './Modals'
 import { RSVPForm, MessagesList } from './RSVPComponents'
@@ -27,7 +26,6 @@ export default function MainPage() {
   const [formData, setFormData] = useState({
     nama_tamu: '',
     pesan: '',
-    pilihan_bunga: 'rose',
     will_attend: null
   })
 
@@ -82,7 +80,6 @@ export default function MainPage() {
       setFormData({
         nama_tamu: '',
         pesan: '',
-        pilihan_bunga: 'rose',
         will_attend: null
       })
 
@@ -361,7 +358,6 @@ export default function MainPage() {
             activeModal === 'datetime' ? 'Tanggal & Lokasi' :
             activeModal === 'lovestory' ? 'Kisah Kami' :
             activeModal === 'gift' ? 'Hadiah' :
-            activeModal === 'aboutus' ? 'About Us' :
             activeModal === 'messages' ? 'Daftar Ucapan' :
             activeModal === 'gallery' ? 'Galeri' :
             'Info'
@@ -371,7 +367,6 @@ export default function MainPage() {
           {activeModal === 'datetime' && <DateTimeModal />}
           {activeModal === 'lovestory' && <LoveStoryModal />}
           {activeModal === 'gift' && <GiftModal onCopy={copyToClipboard} />}
-          {activeModal === 'aboutus' && <AboutUsModal />}
           {activeModal === 'gallery' && <GalleryModal />}
           {activeModal === 'rsvp' && (
             <RSVPForm
