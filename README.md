@@ -1,6 +1,6 @@
 Interactive wedding invitation website with object-based navigation. Built with Next.js
 
-** IN PROGRESS **
+**IN PROGRESS**
 
 ## Features
 - Interactive navigation
