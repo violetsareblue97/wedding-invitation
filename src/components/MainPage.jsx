@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import useSound from 'use-sound';
 import { getMessages, addMessage, subscribeToMessages } from '@/lib/supabase'
 import {
   ModalContainer,
@@ -13,6 +13,7 @@ import {
   GalleryModal,
 } from './Modals'
 import { RSVPForm, MessagesList } from './RSVPComponents'
+import { motion } from 'framer-motion'
 
 export default function MainPage() {
   const [activeModal, setActiveModal] = useState(null)
@@ -22,11 +23,25 @@ export default function MainPage() {
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const audioRef = useRef(null)
+  const [playClick] = useSound('/audio/click.mp3', { volume: 0.5 });
+  const [doneClick] = useSound('/audio/done.mp3', { volume: 1 });
   
+  // Konfigurasi Animasi Cozy Pulse
+  const cozyPulse = {
+    scale: [1, 1.05, 1],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
+
   const [formData, setFormData] = useState({
     nama_tamu: '',
     pesan: '',
-    will_attend: null
+    attend_pemberkatan: false,
+    attend_resepsi: false,
+    tidak_hadir: false
   })
 
   useEffect(() => {
@@ -74,20 +89,24 @@ export default function MainPage() {
       await addMessage(
         formData.nama_tamu.trim(),
         formData.pesan.trim(),
-        formData.will_attend
+        formData.attend_pemberkatan || false,
+        formData.attend_resepsi || false
       )
 
       setFormData({
         nama_tamu: '',
         pesan: '',
-        will_attend: null
+        attend_pemberkatan: false,
+        attend_resepsi: false,
+        tidak_hadir: false
       })
 
+      doneBtnSFX(null); 
       alert('Terima kasih atas ucapannya~')
-      setActiveModal(null)
+      
     } catch (error) {
       console.error('Error sending message:', error)
-      alert('Maaf, terjadi kesalahan. Silakan coba lagi.')
+      alert('Terjadi kesalahan saat mengirim pesan. Pastikan koneksi stabil.')
     } finally {
       setSending(false)
     }
@@ -113,14 +132,22 @@ export default function MainPage() {
     alert('Nomor rekening berhasil disalin!')
   }
 
+  const clickBtnSFX = (modalName) => {
+    playClick();
+    setActiveModal(modalName);
+  };
+
+  const doneBtnSFX = (modalName) => {
+    doneClick();
+    setActiveModal(modalName);
+  };
+
   return (
     <div className="container-9-16">
-      {/* Background music */}
       <audio ref={audioRef} loop>
         <source src="/audio/Berak_Tak_Cebok.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* Main background */}
       <div className="absolute inset-0">
         <Image
           src="/Assets/bg.webp"
@@ -131,12 +158,12 @@ export default function MainPage() {
         />
       </div>
 
-      {/* Interactive Icons Layer */}
       <div className="absolute inset-0">
         
-        {/* Icon Info - Kiri Atas (Bulat) */}
-        <button
-          onClick={() => setActiveModal('legend')}
+        {/* Icon Info */}
+        <motion.button
+          onClick={() => clickBtnSFX('legend')}
+          animate={cozyPulse}
           className="absolute icon-hover z-10"
           style={{ 
             top: '5%',
@@ -151,11 +178,12 @@ export default function MainPage() {
             fill
             style={{ objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Icon Music - Di bawah Info (Bulat) */}
-        <button
+        {/* Music Icon */}
+        <motion.button
           onClick={toggleMusic}
+          animate={cozyPulse}
           className="absolute icon-hover z-10"
           style={{ 
             top: '11%',
@@ -170,11 +198,12 @@ export default function MainPage() {
             fill
             style={{ objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Lihat Ucapan*/}
-        <button
-          onClick={() => setActiveModal('messages')}
+        {/* Lihat Ucapan */}
+        <motion.button
+          onClick={() => clickBtnSFX('messages')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             top: '18%',
@@ -189,11 +218,12 @@ export default function MainPage() {
             height={100}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Galeri - Kiri Bawah (di frame foto) */}
-        <button
-          onClick={() => setActiveModal('gallery')}
+        {/* Galeri */}
+        <motion.button
+          onClick={() => clickBtnSFX('gallery')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             top: '38%',
@@ -208,30 +238,35 @@ export default function MainPage() {
             height={100}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* RSVP & Ucapan*/}
-        <button
-          onClick={() => setActiveModal('rsvp')}
+        {/* RSVP & Ucapan (Kucing) */}
+        <motion.button
+          onClick={() => clickBtnSFX('rsvp')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             bottom: '12%',
             right: '7%',
-            width: '30%'
+            width: '30%',
+            background: 'none',
+            border: 'none',
+            display: 'block'
           }}
         >
-          <Image 
+        <Image 
             src="/Assets/rsvp.svg" 
-            alt="RSVP & Ucapan" 
-            width={350} 
-            height={120}
+            alt="RSVP" 
+            width={250} 
+            height={100}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Tanggal & Lokasi - Kanan Tengah (di kalender) */}
-        <button
-          onClick={() => setActiveModal('datetime')}
+        {/* Tanggal & Lokasi */}
+        <motion.button
+          onClick={() => clickBtnSFX('datetime')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             top: '34%',
@@ -246,11 +281,12 @@ export default function MainPage() {
             height={120}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Kisah Kami - Kanan Tengah Bawah (di meja) */}
-        <button
-          onClick={() => setActiveModal('lovestory')}
+        {/* Kisah Kami */}
+        <motion.button
+          onClick={() => clickBtnSFX('lovestory')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             bottom: '27%',
@@ -265,11 +301,12 @@ export default function MainPage() {
             height={100}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
         {/* Hadiah */}
-        <button
-          onClick={() => setActiveModal('gift')}
+        <motion.button
+          onClick={() => clickBtnSFX('gift')}
+          animate={cozyPulse}
           className="absolute icon-hover"
           style={{ 
             bottom: '38%',
@@ -284,11 +321,12 @@ export default function MainPage() {
             height={100}
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Icon Toggle Greetings (^) - Bawah Kiri */}
-        <button
+        {/* Toggle Greetings (^) */}
+        <motion.button
           onClick={toggleGreetings}
+          animate={cozyPulse}
           className="absolute icon-hover z-10"
           style={{ 
             bottom: '5%',
@@ -303,12 +341,13 @@ export default function MainPage() {
             fill
             style={{ objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* RSVP ADD */}
-        <button
-          onClick={() => setActiveModal('rsvp')}
-          className="absolute icon-hover z-10"
+        {/* RSVP Quick Add (+) */}
+        <motion.button
+          onClick={() => clickBtnSFX('rsvp')}
+          animate={cozyPulse}
+          className="absolute icon-hover pulse-glow z-10"
           style={{ 
             bottom: '5%',
             left: '16%',
@@ -322,9 +361,9 @@ export default function MainPage() {
             fill
             style={{ objectFit: 'contain' }}
           />
-        </button>
+        </motion.button>
 
-        {/* Toggle Greetings Display */}
+        {/* Greetings Display */}
         {showGreetings && messages.length > 0 && (
           <div
             className="absolute bg-white/50 rounded-xl shadow-lg overflow-y-auto px-3 py-2"
@@ -347,11 +386,10 @@ export default function MainPage() {
         )}
       </div>
 
-      {/* Modals */}
       {activeModal && (
         <ModalContainer
           isOpen={!!activeModal}
-          onClose={() => setActiveModal(null)}
+          onClose={() => clickBtnSFX(null)}
           title={
             activeModal === 'legend' ? 'Informasi' :
             activeModal === 'rsvp' ? 'RSVP & Ucapan' :

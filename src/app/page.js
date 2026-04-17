@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import StartPage from '@/components/StartPage'
 import MainPage from '@/components/MainPage'
 
 export default function Home() {

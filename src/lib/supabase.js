@@ -19,14 +19,15 @@ export const getMessages = async () => {
   return data
 }
 
-export const addMessage = async (nama_tamu, pesan, will_attend) => {
-  const { data, error } = await supabase
+export const addMessage = async (nama_tamu, pesan, attend_pemberkatan, attend_resepsi) => {
+  const { data, error} = await supabase
     .from('ucapan_tamu')
     .insert([
       { 
         nama_tamu, 
-        pesan, 
-        will_attend,
+        pesan,
+        attend_pemberkatan,
+        attend_resepsi,
         created_at: new Date().toISOString()
       }
     ])

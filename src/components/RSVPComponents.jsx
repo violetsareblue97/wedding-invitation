@@ -3,6 +3,10 @@
 import { motion } from 'framer-motion'
 
 export function RSVPForm({ formData, setFormData, onSubmit, sending }) {
+  // Logika pembantu untuk mengecek status
+  const isAttendingAny = formData.attend_pemberkatan || formData.attend_resepsi;
+  const isDeclining = formData.tidak_hadir;
+
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -37,40 +41,141 @@ export function RSVPForm({ formData, setFormData, onSubmit, sending }) {
           />
         </div>
 
-        {/* Attendance */}
+        {/* Attendance Selection */}
         <div>
-          <label className="block text-sm font-quicksand font-bold text-[#8D6B75] mb-3">Konfirmasi Kehadiran</label>
-          <div className="flex gap-3">
+          <label className="block text-sm font-quicksand font-bold text-[#8D6B75] mb-2">
+            Konfirmasi Kehadiran *
+          </label>
+          <p className="text-xs font-quicksand text-[#8D6B75]/60 mb-3">
+            Pilih acara yang akan Anda hadiri
+          </p>
+          
+          <div className="space-y-3">
+            {/* Pemberkatan Card */}
             <button
               type="button"
-              onClick={() => setFormData({ ...formData, will_attend: true })}
-              className={`flex-1 py-3 rounded-2xl border-2 font-quicksand font-bold transition-all ${
-                formData.will_attend === true
-                  ? 'border-[#9de09a] bg-[#d7ffd5] text-[#689666]'
-                  : 'border-[#c2ffbf] bg-[#ffffff] text-[#85c283] hover:border-[#9de09a]'
-              }`}
+              disabled={isDeclining}
+              onClick={() => setFormData({ 
+                ...formData, 
+                attend_pemberkatan: !formData.attend_pemberkatan 
+              })}
+              className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
+                formData.attend_pemberkatan
+                  ? 'border-[#DBA5B7] bg-[#FFF5F7] shadow-md'
+                  : 'border-[#EBCAD5] bg-white hover:border-[#DBA5B7]'
+              } ${isDeclining ? 'opacity-40 cursor-not-allowed' : ''}`}
             >
-              Hadir
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="font-quicksand font-bold text-[#8D6B75]">
+                    Pemberkatan
+                  </p>
+                  <p className="text-xs font-quicksand text-[#8D6B75]/70 mt-1">
+                    10 Juni 2026 • 10:00 WIB
+                  </p>
+                </div>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                  formData.attend_pemberkatan
+                    ? 'border-[#DBA5B7] bg-[#DBA5B7]'
+                    : 'border-[#EBCAD5]'
+                }`}>
+                  {formData.attend_pemberkatan && (
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+              </div>
             </button>
+
+            {/* Resepsi Card */}
             <button
               type="button"
-              onClick={() => setFormData({ ...formData, will_attend: false })}
-              className={`flex-1 py-3 rounded-2xl border-2 font-quicksand font-bold transition-all ${
-                formData.will_attend === false
-                  ? 'border-[#e09a9a] bg-[#ffd5d5] text-[#966666]'
-                  : 'border-[#ffdbe7] bg-white text-[#d69393] hover:border-[#e09a9a]'
-              }`}
+              disabled={isDeclining}
+              onClick={() => setFormData({ 
+                ...formData, 
+                attend_resepsi: !formData.attend_resepsi 
+              })}
+              className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
+                formData.attend_resepsi
+                  ? 'border-[#DBA5B7] bg-[#FFF5F7] shadow-md'
+                  : 'border-[#EBCAD5] bg-white hover:border-[#DBA5B7]'
+              } ${isDeclining ? 'opacity-40 cursor-not-allowed' : ''}`}
             >
-              Tidak Hadir
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="font-quicksand font-bold text-[#8D6B75]">
+                    Resepsi
+                  </p>
+                  <p className="text-xs font-quicksand text-[#8D6B75]/70 mt-1">
+                    12 Juni 2026 • 13:00 WIB
+                  </p>
+                </div>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                  formData.attend_resepsi
+                    ? 'border-[#DBA5B7] bg-[#DBA5B7]'
+                    : 'border-[#EBCAD5]'
+                }`}>
+                  {formData.attend_resepsi && (
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            </button>
+
+            {/* Tidak Hadir Card */}
+            <button
+              type="button"
+              disabled={isAttendingAny}
+              onClick={() => setFormData({ 
+                ...formData, 
+                tidak_hadir: !formData.tidak_hadir 
+              })}
+              className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
+                formData.tidak_hadir
+                  ? 'border-[#DBA5B7] bg-[#FFF5F7] shadow-md'
+                  : 'border-[#EBCAD5] bg-white hover:border-[#DBA5B7]'
+              } ${isAttendingAny ? 'opacity-40 cursor-not-allowed' : ''}`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="font-quicksand font-bold text-[#8D6B75]">
+                    Tidak Hadir
+                  </p>
+                  <p className="text-xs font-quicksand text-[#8D6B75]/70 mt-1">
+                    Anda tidak bisa menghadiri acara
+                  </p>
+                </div>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                  formData.tidak_hadir
+                    ? 'border-[#DBA5B7] bg-[#DBA5B7]'
+                    : 'border-[#EBCAD5]'
+                }`}>
+                  {formData.tidak_hadir && (
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+              </div>
             </button>
           </div>
+
+          {/* Helper text */}
+          {!isAttendingAny && !isDeclining && (
+            <p className="text-xs font-quicksand text-[#8D6B75]/50 mt-2 text-center">
+              Pilih minimal satu opsi di atas untuk mengonfirmasi kehadiran Anda
+            </p>
+          )}
         </div>
 
         {/* Submit */}
         <button
           type="submit"
-          disabled={sending}
-          className="w-full py-4 bg-[#DBA5B7] hover:bg-[#C88A9F] text-white font-quicksand font-bold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2"
+          disabled={sending || (!isAttendingAny && !isDeclining)}
+          className="w-full py-4 bg-[#DBA5B7] hover:bg-[#C88A9F] text-white font-quicksand font-bold rounded-2xl transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {sending ? "Mengirim..." : "KIRIM UCAPAN"}
         </button>
@@ -90,8 +195,8 @@ export function MessagesList({ messages, loading }) {
       {loading ? (
         <div className="text-center py-12 text-[#DBA5B7]">Memuat...</div>
       ) : (
-        <div className="space-y-4 max-h-[500px] pr-2">
-          {messages.map((message, index) => (
+        <div className="space-y-4 pr-2">
+          {messages.map((message) => (
             <motion.div
               key={message.id}
               initial={{ opacity: 0, y: 10 }}
@@ -107,13 +212,24 @@ export function MessagesList({ messages, loading }) {
               <p className="font-quicksand text-[#8D6B75] text-sm leading-relaxed mb-3">
                 {message.pesan}
               </p>
-              {message.will_attend !== null && (
-                <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${
-                  message.will_attend ? 'bg-[#FFF5F7] text-[#DBA5B7]' : 'bg-gray-100 text-gray-500'
-                }`}>
-                  {message.will_attend ? 'HADIR' : 'TIDAK HADIR'}
-                </span>
-              )}
+              
+              <div className="flex flex-wrap gap-2">
+                {message.attend_pemberkatan && (
+                  <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FFF5F7] text-[#DBA5B7] border border-[#EBCAD5]">
+                    ✓ PEMBERKATAN
+                  </span>
+                )}
+                {message.attend_resepsi && (
+                  <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FFF5F7] text-[#DBA5B7] border border-[#EBCAD5]">
+                    ✓ RESEPSI
+                  </span>
+                )}
+                {!message.attend_pemberkatan && !message.attend_resepsi && (
+                  <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-gray-100 text-gray-500">
+                    TIDAK HADIR
+                  </span>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
