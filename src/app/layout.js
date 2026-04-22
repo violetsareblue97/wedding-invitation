@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Kukuh & Sandya - Undangan Pernikahan',
-  description: 'Undangan pernikahan Kukuh & Sandya',
+  title: 'Sandya & Kukuh - Undangan Pernikahan',
+  description: 'Undangan pernikahan Sandya & Kukuh',
 }
 
 export default function RootLayout({ children }) {
@@ -17,3 +17,5 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
+
+

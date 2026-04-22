@@ -141,8 +141,8 @@ export function DateTimeModal() {
   return (
     <div className="space-y-4">
       {[
-        { title: "Pemberkatan", date: "2026-06-10T10:00:00", info: "🗓️ 10 Juni 2026 | 10:00 WIB", loc: "⛪ GMII 'Anugerah' Bekasi", grad: "from-[#F5F5F0] to-[#EDE6E7]", icon: "⛪" },
-        { title: "Resepsi", date: "2026-06-12T13:00:00", info: "🗓️ 12 Juni 2026 | 13:00 WIB", loc: "🏛️ Gedung ......", grad: "from-[#D4B69B]/10 to-[#EDE6E7]", icon: "🌸", delay: 0.2 }
+        { title: "Pemberkatan", date: "2026-06-10T10:00:00", info: "10 Juni 2026 | 10:00 WIB", loc: "GMII 'Anugerah' Bekasi", grad: "from-[#F5F5F0] to-[#EDE6E7]", icon: "⛪" },
+        { title: "Resepsi", date: "2026-06-12T13:00:00", info: "12 Juni 2026 | 13:00 WIB", loc: "Gedung ......", grad: "from-[#D4B69B]/10 to-[#EDE6E7]", icon: "🌸", delay: 0.2 }
       ].map((evt, idx) => (
         <motion.div 
           key={idx}
@@ -162,7 +162,7 @@ export function DateTimeModal() {
             <p>{evt.loc}</p>
           </div>
           <a href="#" className="inline-flex items-center justify-center w-full py-3 bg-gradient-to-r from-[#876F4C] to-[#525710] text-white rounded-2xl font-fredoka font-bold text-sm hover:scale-[1.02] transition-all shadow-md">
-            📍 LIHAT MAPS
+            LIHAT MAPS
           </a>
         </motion.div>
       ))}
@@ -283,8 +283,7 @@ export function LoveStoryModal() {
   );
 }
 
-// --- GALLERY MODAL (IRREGULAR GRID - NO OVERLAP) ---
-// --- GALLERY MODAL (IRREGULAR GRID - NO OVERLAP) ---
+// --- GALLERY MODAL ---
 export function GalleryModal() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   
@@ -365,7 +364,7 @@ export function GalleryModal() {
                 </div>
                 <div className="absolute bottom-4 left-0 right-0 text-center">
                   <span className="font-quicksand text-[10px] text-[#876F4C] uppercase tracking-widest font-bold">
-                    Captured Moment
+                    Sandya & Kukuh
                   </span>
                 </div>
               </div>
@@ -387,34 +386,70 @@ export function GalleryModal() {
   );
 }
 
-// --- GIFT MODAL ---
+/// --- GIFT MODAL ---
 export function GiftModal({ onCopy }) {
   const accounts = [
-    { name: "Yesyurun", no: "08653525141", emoji: "🌳" }, 
-    { name: "Sandya", no: "1234567890", emoji: "🍂" }
+    { 
+      name: "a.n. Yesyurun Hasiholan Kukuh Priyambudi", 
+      emoji: "🌳",
+      wallets: [
+        { bank: "Bank Mandiri", no: "1860003454382" },
+        { bank: "Blu BCA", no: "002873605342" }
+      ]
+    }, 
+    { 
+      name: "a.n. Ivkrama Sandya Yudha", 
+      emoji: "🍂",
+      wallets: [
+        { bank: "BNI", no: "0908615539" },
+        { bank: "BRI", no: "050701021049502" }
+      ]
+    }
   ]
+
   return (
     <div className="space-y-5">
       <div className="text-center p-4 bg-[#EDE6E7] rounded-2xl border-2 border-white">
         <p className="font-quicksand text-[#525710] text-sm leading-relaxed">
-          🌿 Kehadiran serta doa restu Anda adalah anugerah terindah bagi kami.
+          Kehadiran serta doa restu Anda adalah anugerah terindah bagi kami.
         </p>
       </div>
-      <div className="space-y-3">
+      
+      <div className="space-y-6">
         {accounts.map((acc, i) => (
           <motion.div 
             key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.2 }}
             className="p-5 bg-gradient-to-br from-white to-[#F5F5F0] rounded-3xl text-center border-2 border-white shadow-lg relative overflow-hidden"
           >
             <div className="absolute top-2 right-2 text-4xl opacity-10">{acc.emoji}</div>
             <div className="flex justify-center mb-3 text-[#B55B37]"><CreditCard size={24} /></div>
-            <p className="font-fredoka font-bold text-[#525710] text-xl mb-3">{acc.name}</p>
-            <div className="bg-[#EDE6E7] py-3 px-4 rounded-2xl mb-4 border border-white shadow-inner">
-              <p className="font-quicksand font-bold text-[#876F4C] tracking-widest text-sm">{acc.no}</p>
+            
+            <p className="font-fredoka font-bold text-[#525710] text-xl mb-4">{acc.name}</p>
+            
+            {/* Iterasi untuk setiap rekening dalam satu blok nama */}
+            <div className="space-y-4">
+              {acc.wallets.map((wallet, idx) => (
+                <div key={idx} className="space-y-2">
+                  <p className="text-[12px] font-bold font-quicksand text-[#876F4C] uppercase tracking-widest">
+                    {wallet.bank}
+                  </p>
+                  <div className="bg-[#EDE6E7] py-3 px-4 rounded-2xl mb-2 border border-white shadow-inner">
+                    <p className="font-quicksand font-bold text-[#876F4C] tracking-widest text-sm">
+                      {wallet.no}
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => onCopy(wallet.no)} 
+                    className="w-full py-2.5 bg-gradient-to-r from-[#B55B37] to-[#876F4C] text-white rounded-xl font-fredoka font-bold text-xs hover:scale-[1.02] transition-all shadow-md flex items-center justify-center gap-2"
+                  >
+                    <Copy size={14} /> SALIN {wallet.bank.toUpperCase()}
+                  </button>
+                </div>
+              ))}
             </div>
-            <button onClick={() => onCopy(acc.no)} className="w-full py-3 bg-gradient-to-r from-[#B55B37] to-[#876F4C] text-white rounded-2xl font-fredoka font-bold text-sm hover:scale-[1.02] transition-all shadow-md">
-              <Copy size={16} className="inline mr-2" /> SALIN REKENING
-            </button>
           </motion.div>
         ))}
       </div>
