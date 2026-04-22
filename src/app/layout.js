@@ -9,24 +9,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       </head>
-      <body className="bg-[#191b00] flex items-center justify-center min-h-screen overflow-hidden">
+      {/* Warna bg-[#191b00] sekarang mencakup seluruh layar luar */}
+      <body className="bg-[#191b00] flex items-center justify-center min-h-[100dvh] overflow-hidden">
         
-        {/* Container Utama:
-            - aspect-[9/16]: Menjaga proporsi HP.
-            - h-screen: Mengikuti tinggi layar.
-            - w-auto: Lebar menyesuaikan tinggi agar tetap 9:16.
-            - max-w-full: Agar tidak meluber ke kanan jika di layar sangat lebar.
-            - relative & overflow-y-auto: Agar konten di dalam bisa di-scroll.
+        {/* Container Utama: 
+            - Menggunakan min-h-[100dvh] agar selalu penuh ke bawah.
+            - aspect-[9/16] tetap dijaga untuk proporsi desain.
         */}
-        <div className="relative h-screen aspect-[9/16] w-auto max-w-full bg-white shadow-2xl overflow-y-auto scrollbar-hide">
-          
-          {/* Konten Website */}
-          <main className="w-full min-h-full">
+        <div className="relative h-[100dvh] aspect-[9/16] w-auto max-w-full bg-[#191b00] shadow-2xl overflow-y-auto scrollbar-hide">
+          <main className="w-full h-full">
             {children}
           </main>
-
         </div>
       </body>
     </html>
