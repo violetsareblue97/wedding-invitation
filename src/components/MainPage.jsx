@@ -15,11 +15,12 @@ import {
 import { RSVPForm, MessagesList } from './RSVPComponents'
 import { motion, AnimatePresence } from 'framer-motion'
 
-  const cozyPulse = {
-    scale: [1, 1.05, 1],
-    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
-  };
-// --- KOMPONEN DENGAN INVISIBLE HITBOX (WARNA MERAH UNTUK DEBUGGING) ---
+const cozyPulse = {
+  scale: [1, 1.05, 1],
+  transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+};
+
+// --- KOMPONEN DENGAN INVISIBLE HITBOX ---
 const RotatingButton = ({ 
   children, 
   onClick, 
@@ -29,7 +30,7 @@ const RotatingButton = ({
   circleStyle = {}, 
   iconStyle = {}, 
   hitboxStyle = {}, 
-  animateProps // Ini yang membawa efek cozyPulse
+  animateProps 
 }) => {
   const maskStyle = {
     WebkitMaskImage: `conic-gradient(from ${gapOffset - (gapDegree / 2)}deg, transparent ${gapDegree}deg, white ${gapDegree}deg)`,
@@ -37,54 +38,35 @@ const RotatingButton = ({
   };
 
   return (
-    // Tambahkan motion.div di sini sebagai pembungkus utama
-    <motion.div 
-      className="absolute z-10" 
-      style={{ ...style }}
-      animate={animateProps} // Efek Pulse diterapkan di sini agar ikon & lingkaran ikut gerak
-    >
-      
-      {/* 1. LAYER IKON */}
-      <div 
-        className="absolute flex items-center justify-center pointer-events-none" 
-        style={{ inset: '0', ...iconStyle }}
-      >
-        {children}
-      </div>
+    <div className="absolute z-10" style={{ ...style }}>
+      <motion.div animate={animateProps} className="absolute inset-0 pointer-events-none">
+        <div className="absolute flex items-center justify-center" style={{ inset: '0', ...iconStyle }}>
+          {children}
+        </div>
+        <div className="absolute" style={{ ...maskStyle, inset: '0', ...circleStyle }}>
+          <motion.svg 
+            viewBox="0 0 100 100" 
+            className="w-full h-full" 
+            animate={{ rotate: 360 }} 
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          >
+            <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="2" strokeDasharray="5 5" />
+          </motion.svg>
+        </div>
+      </motion.div>
 
-      {/* 2. LAYER LINGKARAN */}
-      <div 
-        className="absolute pointer-events-none" 
-        style={{ ...maskStyle, inset: '0', ...circleStyle }}
-      >
-        <motion.svg 
-          viewBox="0 0 100 100" 
-          className="w-full h-full" 
-          animate={{ rotate: 360 }} 
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        >
-          <circle 
-            cx="50" cy="50" r="46" 
-            fill="none" stroke="white" strokeWidth="2" strokeDasharray="5 5" 
-          />
-        </motion.svg>
-      </div>
-
-      {/* 3. LAYER HITBOX */}
       <motion.button
         onClick={onClick}
         whileTap={{ scale: 0.9 }}
-        className="absolute z-20 rounded-full"
+        className="absolute z-20 rounded-full pointer-events-auto"
         style={{ 
-          width: '50px', 
-          height: '50px', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
+          width: '50px', height: '50px', 
+          top: '50%', left: '50%', 
+          marginLeft: '-25px', marginTop: '-25px',
           ...hitboxStyle 
         }}
       />
-    </motion.div>
+    </div>
   );
 };
 
@@ -96,19 +78,15 @@ export default function MainPage() {
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [visibleCount, setVisibleCount] = useState(3)
-  const containerRef = useRef(null)
+  const [visibleCount] = useState(3)
   const audioRef = useRef(null)
   const [playClick] = useSound('/audio/click.mp3', { volume: 0.8 });
   const [doneClick] = useSound('/audio/done.mp3', { volume: 0.8 });
-  
-
 
   const [formData, setFormData] = useState({
     nama_tamu: '', pesan: '', attend_pemberkatan: false, attend_resepsi: false, tidak_hadir: false
   })
 
-  // --- LOGIC FETCHING ---
   useEffect(() => {
     loadMessages()
     const subscription = subscribeToMessages((newMessage) => {
@@ -123,7 +101,7 @@ export default function MainPage() {
   useEffect(() => {
     if (showGreetings && messages.length > 0) {
       const timer = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % Math.min(messages.length, 10));
+        setCurrentIndex((prev) => (prev + 1) % messages.length);
       }, 5000);
       return () => clearInterval(timer);
     }
@@ -157,6 +135,15 @@ export default function MainPage() {
   const clickBtnSFX = (modalName) => { playClick(); setActiveModal(modalName); };
   const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert('Berhasil disalin!'); }
 
+  const getVisibleMessages = () => {
+    if (messages.length === 0) return [];
+    let items = [];
+    for (let i = 0; i < visibleCount; i++) {
+      items.push(messages[(currentIndex + i) % messages.length]);
+    }
+    return items;
+  };
+
   return (
     <div className="container-9-16">
       <audio ref={audioRef} loop><source src="/audio/lagu.mp3" type="audio/mpeg" /></audio>
@@ -166,105 +153,62 @@ export default function MainPage() {
       </div>
 
       <div className="absolute inset-0">
-        {/* --- TOMBOL TANPA PULSE (STAGNAN) --- */}
         <motion.button onClick={() => clickBtnSFX('legend')} className="absolute z-10" style={{ top: '5%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
           <Image src="/assets/info.svg" alt="Info" fill style={{ objectFit: 'contain' }} />
         </motion.button>
-
         <motion.button onClick={toggleMusic} className="absolute z-10" style={{ top: '11%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
           <Image src={isMusicPlaying ? "/assets/music_on.svg" : "/assets/music_off.svg"} alt="Music" fill style={{ objectFit: 'contain' }} />
         </motion.button>
-
         <motion.button onClick={() => setShowGreetings(!showGreetings)} className="absolute z-10" style={{ bottom: '5%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
           <Image src="/assets/up.svg" alt="Up" fill style={{ objectFit: 'contain' }} />
         </motion.button>
-
         <motion.button onClick={() => clickBtnSFX('rsvp')} className="absolute z-10" style={{ bottom: '5%', left: '17%', width: '15%', aspectRatio: '1/1' }}>
           <Image src="/assets/add.svg" alt="Add" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
-
-        {/* --- TOMBOL DENGAN EFEK PULSE --- */}
-        
-        {/* PESAN-PESAN / UCAPAN */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('messages')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={145} gapOffset={146}
-          style={{ top: '6%', left: '23.5%', width: '36%', height: '36%' }}
-          circleStyle={{ top: '-14%', left: '8%', width: '60%'}}
-          hitboxStyle={{ width: '80px', height: '80px', top: '25.5%', left: '6%' }} 
-        >
+        {/* --- TOMBOL-TOMBOL --- */}
+        <RotatingButton onClick={() => clickBtnSFX('messages')} animateProps={cozyPulse} gapDegree={145} gapOffset={146} style={{ top: '6%', left: '23.5%', width: '36%', height: '36%' }} circleStyle={{ top: '-14%', left: '8%', width: '60%'}} hitboxStyle={{ width: '80px', height: '80px', top: '36%', left: '25%' }} >
           <Image src="/assets/ucapan.svg" alt="Lihat Ucapan" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* GALERI */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('gallery')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={73} gapOffset={218}
-          style={{ bottom: '4%', right: '20%', width: '25%', height: '16%' }}
-          circleStyle={{ top: '-40%', left: '29%', width: '88%'}}
-          hitboxStyle={{ width: '80px', height: '80px', top: '-11%', left: '30%' }}
-        >
+        <RotatingButton onClick={() => clickBtnSFX('gallery')} animateProps={cozyPulse} gapDegree={73} gapOffset={218} style={{ bottom: '4%', right: '20%', width: '25%', height: '16%' }} circleStyle={{ top: '-40%', left: '29%', width: '88%'}} hitboxStyle={{ width: '80px', height: '80px', top: '15%', left: '57%' }} >
           <Image src="/assets/galeri.svg" alt="Gallery" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* RSVP */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('rsvp')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={145} gapOffset={186}
-          style={{ top: '27.6%', left: '19%', width: '36%', height: '29%' }}
-          circleStyle={{ bottom: '32%', left: '20%', width: '65%'}}
-          hitboxStyle={{ width: '80px', height: '80px', top: '12%', left: '20%' }}
-        >
+        <RotatingButton onClick={() => clickBtnSFX('rsvp')} animateProps={cozyPulse} gapDegree={145} gapOffset={186} style={{ top: '27.6%', left: '19%', width: '36%', height: '29%' }} circleStyle={{ bottom: '32%', left: '20%', width: '65%'}} hitboxStyle={{ width: '80px', height: '80px', top: '26%', left: '41%' }} >
           <Image src="/assets/rsvp.svg" alt="RSVP" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* DATE / TANGGAL & LOKASI */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('datetime')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={155} gapOffset={195}
-          style={{ top: '15%', right: '11%', width: '36%', height: '32%' }}
-          circleStyle={{ bottom: '28%', left: '25.5%', width: '63%'}}
-          hitboxStyle={{ width: '80px', height: '80px', top: '16%', left: '25.5%' }}
-        >
+        <RotatingButton onClick={() => clickBtnSFX('datetime')} animateProps={cozyPulse} gapDegree={155} gapOffset={195} style={{ top: '15%', right: '11%', width: '36%', height: '32%' }} circleStyle={{ bottom: '28%', left: '25.5%', width: '63%'}} hitboxStyle={{ width: '80px', height: '80px', top: '29%', left: '45%' }} >
           <Image src="/assets/date.svg" alt="Tanggal" width={350} height={120} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* KISAH KAMI */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('lovestory')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={130} gapOffset={14}
-          style={{ bottom: '29%', right: '17%', width: '33%', height: '29%' }}
-          circleStyle={{ bottom: '18%', left: '12%', width: '70%'}}
-          hitboxStyle={{ width: '70px', height: '110px', top: '18%', left: '12%' }}
-        >
+        <RotatingButton onClick={() => clickBtnSFX('lovestory')} animateProps={cozyPulse} gapDegree={130} gapOffset={14} style={{ bottom: '29%', right: '17%', width: '33%', height: '29%' }} circleStyle={{ bottom: '18%', left: '12%', width: '70%'}} hitboxStyle={{ width: '80px', height: '120px', top: '31%', left: '34%' }} >
           <Image src="/assets/kisah.svg" alt="Kisah" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* HADIAH */}
-        <RotatingButton 
-          onClick={() => clickBtnSFX('gift')} 
-          animateProps={cozyPulse} // EFEK PULSE AKTIF
-          gapDegree={86} gapOffset={170}
-          style={{ bottom: '18%', right: '5%', width: '24%', height: '21%' }}
-          circleStyle={{ bottom: '19%', left: '0%', width: '88%'}}
-          hitboxStyle={{ width: '80px', height: '80px', top: '10%', left: '-1%' }}
-        >
+        <RotatingButton onClick={() => clickBtnSFX('gift')} animateProps={cozyPulse} gapDegree={86} gapOffset={170} style={{ bottom: '18%', right: '5%', width: '24%', height: '21%' }} circleStyle={{ bottom: '19%', left: '0%', width: '88%'}} hitboxStyle={{ width: '80px', height: '80px', top: '28%', left: '26%' }} >
           <Image src="/assets/hadiah.svg" alt="Hadiah" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
-        {/* Greetings Animation... */}
+        {/* --- GREETINGS ANIMATION (ROLLING EFFECT) --- */}
         {showGreetings && messages.length > 0 && (
-          <div className="absolute z-20 pointer-events-none overflow-hidden" style={{ bottom: '12%', left: '6%', width: '47%', height: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-            <div ref={containerRef} className="space-y-3">
+          <div className="absolute z-20 pointer-events-none overflow-hidden" style={{ bottom: '12%', left: '6%', width: '47%', height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            <div className="relative space-y-3">
               <AnimatePresence mode="popLayout" initial={false}>
-                {messages.slice(currentIndex, currentIndex + visibleCount).map((msg) => (
-                  <motion.div key={msg.id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white/50 backdrop-blur-m p-3.5 rounded-2xl rounded-bl-none shadow-md border border-white/40 w-full">
+                {getVisibleMessages().map((msg, index) => (
+                  <motion.div 
+                    key={`${msg.id}-${msg.nama_tamu}`} // Key unik agar AnimatePresence mendeteksi perubahan
+                    layout
+                    initial={{ opacity: 0, y: 50 }} // Chat 3 masuk dari bawah & transparan
+                    animate={{ opacity: 1, y: 0 }}  // Chat 2 & 3 jadi solid di posisi mereka
+                    exit={{ opacity: 0, y: -50 }}  // Chat 1 naik ke atas & transparan lalu hilang
+                    transition={{ 
+                      duration: 0.8,
+                      ease: [0.4, 0, 0.2, 1] // Transisi halus
+                    }}
+                    className="bg-white/50 backdrop-blur-m p-3.5 rounded-2xl rounded-bl-none shadow-md border border-white/40 w-full"
+                  >
                     <p className="font-britney text-[#B55B37] text-[11px] font-bold truncate">{msg.nama_tamu}</p>
                     <p className="font-chillax text-[#525710] text-[10px] line-clamp-3">{msg.pesan}</p>
                   </motion.div>
@@ -275,7 +219,6 @@ export default function MainPage() {
         )}
       </div>
 
-      {/* --- MODAL LOGIC FIXED --- */}
       {activeModal && (
         <ModalContainer
           isOpen={!!activeModal}
