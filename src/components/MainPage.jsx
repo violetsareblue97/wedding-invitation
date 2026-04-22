@@ -92,8 +92,8 @@ export default function MainPage() {
   const [visibleCount, setVisibleCount] = useState(3)
   const containerRef = useRef(null)
   const audioRef = useRef(null)
-  const [playClick] = useSound('/audio/click.mp3', { volume: 1 });
-  const [doneClick] = useSound('/audio/done.mp3', { volume: 1 });
+  const [playClick] = useSound('/audio/click.mp3', { volume: 0.8 });
+  const [doneClick] = useSound('/audio/done.mp3', { volume: 0.8 });
   
   const cozyPulse = {
     scale: [1, 1.10, 1],
@@ -151,32 +151,32 @@ export default function MainPage() {
   }
 
   const clickBtnSFX = (modalName) => { playClick(); setActiveModal(modalName); };
-  const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert('Disalin!'); }
+  const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert('Berhasil disalin!'); }
 
   return (
     <div className="container-9-16">
       <audio ref={audioRef} loop><source src="/audio/lagu.mp3" type="audio/mpeg" /></audio>
 
       <div className="absolute inset-0">
-        <Image src="/Assets/bg.svg" alt="Background" fill style={{ objectFit: 'cover' }} priority />
+        <Image src="/assets/bg.svg" alt="Background" fill style={{ objectFit: 'cover' }} priority />
       </div>
 
       <div className="absolute inset-0">
         {/* BUTTON STANDAR */}
         <motion.button onClick={() => clickBtnSFX('legend')} animate={cozyPulse} className="absolute z-10" style={{ top: '5%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
-          <Image src="/Assets/info.svg" alt="Info" fill style={{ objectFit: 'contain' }} />
+          <Image src="/assets/info.svg" alt="Info" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
         <motion.button onClick={toggleMusic} animate={cozyPulse} className="absolute z-10" style={{ top: '11%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
-          <Image src={isMusicPlaying ? "/Assets/music_on.svg" : "/Assets/music_off.svg"} alt="Music" fill style={{ objectFit: 'contain' }} />
+          <Image src={isMusicPlaying ? "/assets/music_on.svg" : "/assets/music_off.svg"} alt="Music" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
         <motion.button onClick={() => setShowGreetings(!showGreetings)} animate={cozyPulse} className="absolute z-10" style={{ bottom: '5%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
-          <Image src="/Assets/up.svg" alt="Up" fill style={{ objectFit: 'contain' }} />
+          <Image src="/assets/up.svg" alt="Up" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
         <motion.button onClick={() => clickBtnSFX('rsvp')} animate={cozyPulse} className="absolute z-10" style={{ bottom: '5%', left: '17%', width: '15%', aspectRatio: '1/1' }}>
-          <Image src="/Assets/add.svg" alt="Add" fill style={{ objectFit: 'contain' }} />
+          <Image src="/assets/add.svg" alt="Add" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
         {/* PESAN-PESAN / UCAPAN */}
@@ -188,7 +188,7 @@ export default function MainPage() {
           circleStyle={{ top: '-14%', left: '8%', width: '60%'}}
           hitboxStyle={{ width: '80px', height: '80px', top: '25.5%', left: '6%' }} 
         >
-          <Image src="/Assets/ucapan.svg" alt="Lihat Ucapan" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/ucapan.svg" alt="Lihat Ucapan" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* GALERI */}
@@ -200,7 +200,7 @@ export default function MainPage() {
           circleStyle={{ top: '-40%', left: '29%', width: '88%'}}
           hitboxStyle={{ width: '80px', height: '80px', top: '-11%', left: '30%' }}
         >
-          <Image src="/Assets/galeri.svg" alt="Gallery" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/galeri.svg" alt="Gallery" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* RSVP */}
@@ -212,7 +212,7 @@ export default function MainPage() {
           circleStyle={{ bottom: '32%', left: '20%', width: '65%'}}
           hitboxStyle={{ width: '80px', height: '80px', top: '12%', left: '20%' }}
         >
-          <Image src="/Assets/rsvp.svg" alt="RSVP" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/rsvp.svg" alt="RSVP" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* DATE / TANGGAL & LOKASI */}
@@ -224,7 +224,7 @@ export default function MainPage() {
           circleStyle={{ bottom: '28%', left: '25.5%', width: '63%'}}
           hitboxStyle={{ width: '80px', height: '80px', top: '16%', left: '25.5%' }}
         >
-          <Image src="/Assets/date.svg" alt="Tanggal" width={350} height={120} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/date.svg" alt="Tanggal" width={350} height={120} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* KISAH KAMI */}
@@ -236,7 +236,7 @@ export default function MainPage() {
           circleStyle={{ bottom: '18%', left: '12%', width: '70%'}}
           hitboxStyle={{ width: '70px', height: '110px', top: '18%', left: '12%' }}
         >
-          <Image src="/Assets/kisah.svg" alt="Kisah" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/kisah.svg" alt="Kisah" width={300} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* HADIAH */}
@@ -248,7 +248,7 @@ export default function MainPage() {
           circleStyle={{ bottom: '19%', left: '0%', width: '88%'}}
           hitboxStyle={{ width: '80px', height: '80px', top: '10%', left: '-1%' }}
         >
-          <Image src="/Assets/hadiah.svg" alt="Hadiah" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+          <Image src="/assets/hadiah.svg" alt="Hadiah" width={250} height={100} style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </RotatingButton>
 
         {/* Greetings Animation... */}
