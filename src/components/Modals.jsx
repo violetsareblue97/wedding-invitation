@@ -237,13 +237,53 @@ export function LoveStoryModal() {
 // --- GALLERY MODAL (DESAIN TETAP) ---
 export function GalleryModal() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const photos = [
-    { id: 1, url: "./images/gallery/MLJ02865.jpg", rotation: -1, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-[#876F4C] p-2 pb-6 text-white" },
-    { id: 2, url: "./images/gallery/MLJ02930.jpg", rotation: 1.5, width: "col-span-1", aspect: "aspect-square", frame: "bg-white p-2 pb-7 text-[#525710]" },
-    { id: 3, url: "./images/gallery/MLJ03038.jpg", rotation: -2, width: "col-span-2", aspect: "aspect-[video]", frame: "bg-[#B55B37] p-2 pb-6 text-white" },
-    { id: 11, url: "./images/gallery/MLJ03058.jpg", rotation: 3, width: "col-span-2", aspect: "aspect-[video]", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
-  ];
+ const photos = [
 
+    // --- Data foto tetap sama ---
+
+    { id: 1, url: "./images/gallery/MLJ02865.jpg", rotation: -1, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-[#876F4C] p-2 pb-6 text-white" },
+
+    { id: 2, url: "./images/gallery/MLJ02930.jpg", rotation: 1.5, width: "col-span-1", aspect: "aspect-square", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 3, url: "./images/gallery/MLJ03038.jpg", rotation: -2, width: "col-span-2", aspect: "aspect-[video]", frame: "bg-[#B55B37] p-2 pb-6 text-white" },
+
+    { id: 4, url: "./images/gallery/MLJ02970.jpg", rotation: 1, width: "col-span-1", aspect: "aspect-square", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 5, url: "./images/gallery/MLJ02995.jpg", rotation: -1.5, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-[#876F4C] p-2 pb-6 text-white" },
+
+    { id: 6, url: "./images/gallery/MLJ02869.jpg", rotation: 2, width: "col-span-1", aspect: "aspect-square", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 7, url: "./images/gallery/MLJ02914.jpg", rotation: -1, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-[#B55B37] p-2 pb-6 text-white" },
+
+    { id: 8, url: "./images/gallery/MLJ02983.jpg", rotation: 1.2, width: "col-span-2", aspect: "aspect-[video]", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 9, url: "./images/gallery/MLJ03003.jpg", rotation: -1.8, width: "col-span-1", aspect: "aspect-[4/5]", frame: "bg-[#876F4C] p-2 pb-6 text-white" },
+
+    { id: 10, url: "./images/gallery/MLJ02964.jpg", rotation: 1, width: "col-span-1", aspect: "aspect-square", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 11, url: "./images/gallery/MLJ03058.jpg", rotation: 3, width: "col-span-2", aspect: "aspect-[video]", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
+
+    { id: 12, url: "./images/gallery/MLJ03120.jpg", rotation: -3.5, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 13, url: "./images/gallery/MLJ03161.jpg", rotation: 2.5, width: "col-span-1", aspect: "aspect-square", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
+
+    { id: 14, url: "./images/gallery/MLJ03141.jpg", rotation: -2.8, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 15, url: "./images/gallery/MLJ03113.jpg", rotation: 4, width: "col-span-1", aspect: "aspect-square", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
+
+    { id: 16, url: "./images/gallery/MLJ03191.jpg", rotation: -3.2, width: "col-span-2", aspect: "aspect", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 17, url: "./images/gallery/MLJ03118.jpg", rotation: 3.5, width: "col-span-1", aspect: "aspect-square", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
+
+    { id: 18, url: "./images/gallery/MLJ03092.jpg", rotation: -4, width: "col-span-1", aspect: "aspect-[3/4]", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 19, url: "./images/gallery/MLJ03170.jpg", rotation: 3, width: "col-span-1", aspect: "aspect-square", frame: "bg-[#EDE6E7] p-3 pb-8 text-[#876F4C]" },
+
+    { id: 20, url: "./images/gallery/MLJ03266.jpg", rotation: -3.5, width: "col-span-1", aspect: "aspect-[4/5]", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+    { id: 21, url: "./images/gallery/MLJ03094.jpg", rotation: -3.2, width: "col-span-2", aspect: "aspect", frame: "bg-white p-2 pb-7 text-[#525710]" },
+
+  ];
   return (
     <div className="space-y-6 py-4">
       <div className="grid grid-cols-2 gap-y-8 gap-x-4 items-start px-2">

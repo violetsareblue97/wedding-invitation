@@ -162,7 +162,7 @@ export default function MainPage() {
         <motion.button onClick={() => setShowGreetings(!showGreetings)} className="absolute z-10" style={{ bottom: '5%', left: '7%', width: '15%', aspectRatio: '1/1' }}>
           <Image src="/assets/up.svg" alt="Up" fill style={{ objectFit: 'contain' }} />
         </motion.button>
-        <motion.button onClick={() => clickBtnSFX('rsvp')} className="absolute z-10" style={{ bottom: '5%', left: '17%', width: '15%', aspectRatio: '1/1' }}>
+        <motion.button onClick={() => clickBtnSFX('rsvp')} className="absolute z-10" style={{ bottom: '5%', left: '18%', width: '15%', aspectRatio: '1/1' }}>
           <Image src="/assets/add.svg" alt="Add" fill style={{ objectFit: 'contain' }} />
         </motion.button>
 
@@ -193,7 +193,7 @@ export default function MainPage() {
 
         {/* --- GREETINGS ANIMATION (ROLLING EFFECT) --- */}
         {showGreetings && messages.length > 0 && (
-          <div className="absolute z-20 pointer-events-none overflow-hidden" style={{ bottom: '12%', left: '6%', width: '47%', height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+          <div className="absolute z-20 pointer-events-none overflow-hidden" style={{ bottom: '12%', left: '6%', width: '45%', height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
             <div className="relative space-y-3">
               <AnimatePresence mode="popLayout" initial={false}>
                 {getVisibleMessages().map((msg, index) => (
