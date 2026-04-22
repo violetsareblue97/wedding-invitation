@@ -1,19 +1,13 @@
-@import url('https://api.fontshare.com/v2/css?f[]=chillax@400,1&f[]=quicksand@500&f[]=britney@400&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=quicksand@600,700&display=swap');
+/* --- 1. FONT IMPORTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Comfortaa:wght@400;500;600;700&family=Pacifico&family=Great+Vibes&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=chillax@400,1&f[]=britney@400&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-
+/* --- 2. TAILWIND CORE --- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  .chillax { font-family: 'chillax', sans-serif; }
-  .quicksand { font-family: 'Quicksand', sans-serif; }
-  .britney { font-family: 'Britney', cursive; }
-
-}
-
+/* --- 3. BASE STYLES --- */
 @layer base {
   html, body {
     margin: 0;
@@ -22,15 +16,21 @@ body {
     height: 100%;
     overflow: hidden;
   }
-  
+
   body {
     display: flex;
     align-items: center;
     justify-content: center;
     background: #000;
+    font-family: 'Quicksand', sans-serif;
   }
+
+  .chillax { font-family: 'chillax', sans-serif; }
+  .quicksand { font-family: 'Quicksand', sans-serif; }
+  .britney { font-family: 'Britney', cursive; }
 }
 
+/* --- 4. UTILITIES (Updated with your Palette) --- */
 @layer utilities {
   .icon-hover {
     transition: all 0.3s ease;
@@ -39,10 +39,10 @@ body {
   
   .icon-hover:hover {
     transform: scale(1.1);
-    filter: brightness(1.2);
+    /* Menggunakan pendaran Lime Moss (#88A516) */
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(136, 165, 22, 0.6));
   }
   
-  /* Fixed 9:16 aspect ratio container */
   .container-9-16 {
     position: relative;
     width: 100vw;
@@ -53,37 +53,86 @@ body {
     overflow: hidden;
     background-color: #000000;
   }
+
+  /* Font Utilities */
+  .font-fredoka { font-family: 'Fredoka', sans-serif; }
+  .font-quicksand { font-family: 'Quicksand', sans-serif; }
+  .font-comfortaa { font-family: 'Comfortaa', sans-serif; }
+  .font-pacifico { font-family: 'Pacifico', cursive; }
+  .font-britney { font-family: 'Britney', cursive; }
+  .font-chillax { font-family: 'chillax', sans-serif; }
+  .font-greatvibes { font-family: 'Great Vibes', cursive; }
+
+  /* Shadows - Menggunakan Cinnamon Wood (#B55B37) untuk kesan hangat */
+  .shadow-whimsy {
+    box-shadow: 0 8px 32px rgba(181, 91, 55, 0.15), 
+                0 2px 8px rgba(82, 87, 16, 0.1);
+  }
+
+  .shadow-whimsy-lg {
+    box-shadow: 0 20px 60px rgba(181, 91, 55, 0.25), 
+                0 4px 16px rgba(135, 111, 76, 0.15);
+  }
+
+  /* Text Shadow - Menggunakan Olive Leaf (#525710) */
+  .text-shadow-soft {
+    text-shadow: 0 2px 4px rgba(82, 87, 16, 0.3);
+  }
+
+  /* Gradient Text - Perpaduan Tan, Cinnamon, dan Olive Wood */
+  .text-gradient-whimsy {
+    background: linear-gradient(135deg, #D4B69B, #B55B37, #876F4C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* --- 5. SCROLLBAR STYLES (Custom Palette) --- */
+.scrollbar-whimsy::-webkit-scrollbar {
+  width: 8px;
 }
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.scrollbar-whimsy::-webkit-scrollbar-track {
+  background: #EDE6E7; /* Alabaster Grey */
+  border-radius: 10px;
 }
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+.scrollbar-whimsy::-webkit-scrollbar-thumb {
+  /* Gradasi dari Lime Moss ke Olive Leaf */
+  background: linear-gradient(180deg, #88A516 0%, #876F4C 50%, #525710 100%);
+  border-radius: 10px;
+  border: 2px solid #EDE6E7;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.scrollbar-whimsy::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #99B81D 0%, #997D56 50%, #636913 100%);
+  box-shadow: 0 0 8px rgba(136, 165, 22, 0.4);
 }
 
 .scrollbar-custom::-webkit-scrollbar {
   width: 6px;
 }
 .scrollbar-custom::-webkit-scrollbar-track {
-  background: #FFF5F7;
+  background: #EDE6E7;
 }
 .scrollbar-custom::-webkit-scrollbar-thumb {
-  background-color: #DBA5B7;
+  background-color: #876F4C; /* Olive Wood */
   border-radius: 20px;
 }
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background-color: #C88A9F;
+
+/* --- 6. ANIMATIONS --- */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
